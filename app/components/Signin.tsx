@@ -1,49 +1,59 @@
-"use client";
+'use client';
+import React, { useState } from 'react';
+import Link from 'next/link';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import Button from "../components/Button";
+const SignInPage: React.FC = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-type FormData = {
-  email: string;
-  password: string;
-};
-
-export default function SignIn() {
-  const { register, handleSubmit } = useForm<FormData>();
-  const [error, setError] = useState("");
-
-  const onSubmit = (data: FormData) => {
-    setError("");
-    // TODO: API login logic
-    console.log("Sign in data:", data);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Sign in data:', { email, password });
+    // Handle authentication here
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded shadow-md w-full max-w-md"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 pt-32">
+      <div className="bg-white p-10 rounded-xl shadow-lg w-full max-w-md">
+        <h1 className="text-3xl font-bold mb-6 text-center luxury-font">Sign In</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-bold mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full border border-slate-300 px-4 py-2 rounded focus:outline-none focus:ring-1 focus:ring-amber-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold mb-1">Password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full border border-slate-300 px-4 py-2 rounded focus:outline-none focus:ring-1 focus:ring-amber-500"
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-slate-900 text-white py-3 text-xs uppercase font-bold tracking-widest hover:bg-amber-600 transition-all"
+          >
+            Sign In
+          </button>
+        </form>
 
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-
-        <input
-          {...register("email")}
-          type="email"
-          placeholder="Email"
-          className="w-full p-2 border rounded mb-4"
-        />
-        <input
-          {...register("password")}
-          type="password"
-          placeholder="Password"
-          className="w-full p-2 border rounded mb-4"
-        />
-
-        <Button text="Sign In" type="submit" />
-      </form>
+        <p className="text-sm text-center mt-4 text-slate-500">
+          Don&apos;t have an account?{' '}
+          <Link href="/register" className="text-amber-600 font-bold hover:underline">
+            Register
+          </Link>
+        </p>
+      </div>
     </div>
   );
-}
+};
+
+export default SignInPage;
