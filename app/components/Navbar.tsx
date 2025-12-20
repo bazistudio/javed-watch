@@ -33,9 +33,12 @@ const Header: React.FC = () => {
       }`}
     >
       <div className="container mx-auto px-6 flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold tracking-tighter luxury-font">
-          CHRONO<span className="text-amber-600">LUX</span>
-        </Link>
+    <Link href="/" className="text-2xl font-bold tracking-tighter luxury-font">
+      <span className={isScrolled ? 'text-slate-900' : 'text-white'}>
+        CHRONO
+      </span>{' '}
+      <span className="text-amber-600">LUX</span>
+    </Link>
 
         <nav className="hidden md:flex space-x-8 items-center">
           {navLinks.map((link) => (
