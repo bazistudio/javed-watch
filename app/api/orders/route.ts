@@ -1,44 +1,27 @@
+export const runtime = "nodejs";
+
 import { NextResponse } from "next/server";
+import { requireAuth } from "../../lib/auth";
 
-// Temporary in-memory orders store
-let orders: {
-  id: string;
-  items: { productId: string; name: string; price: number; quantity: number }[];
-  total: number;
-  customerName: string;
-  email: string;
-  status: string;
-}[] = [];
+let orders: any[] = [];
 
-// GET all orders
-export async function GET() {
-  return NextResponse.json({ success: true, orders });
+export async function GET(req: Request) {
+  const user = requireAuth(req);
+  if (!user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json(orders);
 }
 
-// POST - Place new order
 export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-
-    if (!body.items || !body.customerName || !body.email) {
-      return NextResponse.json({ success: false, message: "Missing required fields" }, { status: 400 });
-    }
-
-    const total = body.items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
-
-    const newOrder = {
-      id: Date.now().toString(),
-      items: body.items,
-      total,
-      customerName: body.customerName,
-      email: body.email,
-      status: "Pending",
-    };
-
-    orders.push(newOrder);
-
-    return NextResponse.json({ success: true, message: "Order placed successfully", order: newOrder });
-  } catch (error) {
-    return NextResponse.json({ success: false, message: "Invalid JSON" }, { status: 400 });
+  const user = requireAuth(req);
+  if (!user) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
+
+  const order = await req.json();
+  orders.push(order);
+
+  return NextResponse.json({ success: true, order });
 }
